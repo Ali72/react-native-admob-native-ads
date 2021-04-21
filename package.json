@@ -53,6 +53,7 @@
   },
   "private": false,
   "devDependencies": {
+	  "react-native": "0.63.4",
     "babel-eslint": "^7.2.3",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^6.3.0",
