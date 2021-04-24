@@ -31,7 +31,7 @@ public class RNAdmobNativeAdsManager extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setRequestConfiguration(ReadableMap config) {
+    public void setRequestConfiguration(ReadableMap config, Promise promise) {
         RequestConfiguration.Builder configuration = new RequestConfiguration.Builder();
 
         if (config.hasKey("maxAdContentRating")) {
@@ -68,6 +68,8 @@ public class RNAdmobNativeAdsManager extends ReactContextBaseJavaModule {
         MobileAds.setRequestConfiguration(configuration.build());
         // TODO: Is it a problem that I'm calling initialize twice?
         MobileAds.initialize(getReactApplicationContext());
+
+        promise.resolve(null);
     }
 
     @ReactMethod
