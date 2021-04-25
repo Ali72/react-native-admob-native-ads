@@ -1,5 +1,8 @@
 package com.ammarahmed.rnadmob.nativeads;
 
+import android.content.Context;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.Arguments;
@@ -21,10 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 public class RNAdmobNativeAdsManager extends ReactContextBaseJavaModule {
-    public ReactApplicationContext mContext;
     public RNAdmobNativeAdsManager(ReactApplicationContext context) {
         super(context);
-        mContext = context;
     }
 
     @NonNull
@@ -35,6 +36,12 @@ public class RNAdmobNativeAdsManager extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setRequestConfiguration(ReadableMap config, Promise promise) {
+        Context context = getReactApplicationContext().getCurrentActivity();
+        if (context == null) {
+            // Todo: make sure setRequestConfiguration() is not called outside MainActivity
+            Log.e("AdmobNativeAds", "setRequestConfiguration() is called outside MainActivity");
+            context = getReactApplicationContext();
+        }
         RequestConfiguration.Builder configuration = new RequestConfiguration.Builder();
 
         if (config.hasKey("maxAdContentRating")) {
@@ -69,7 +76,7 @@ public class RNAdmobNativeAdsManager extends ReactContextBaseJavaModule {
         }
 
         MobileAds.setRequestConfiguration(configuration.build());
-        MobileAds.initialize(getReactApplicationContext().getCurrentActivity(), (InitializationStatus status) -> {
+        MobileAds.initialize(context, (InitializationStatus status) -> {
             WritableMap map = Arguments.createMap();
             for (Map.Entry<String, AdapterStatus> entry: status.getAdapterStatusMap().entrySet()) {
                 WritableMap info = Arguments.createMap();
@@ -89,7 +96,7 @@ public class RNAdmobNativeAdsManager extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void registerRepository(ReadableMap config, Promise promise){
-        WritableMap result = CacheManager.instance.registerRepo(mContext, config);
+        WritableMap result = CacheManager.instance.registerRepo(getReactApplicationContext(), config);
         if (result.hasKey("success") && result.getBoolean("success")){
             CacheManager.instance.requestAds(result.getString("repo"));
         }
