@@ -2,6 +2,7 @@ package com.ammarahmed.rnadmob.nativeads;
 
 import androidx.annotation.NonNull;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -12,16 +13,18 @@ import com.facebook.react.bridge.WritableMap;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.initialization.AdapterStatus;
+import com.google.android.gms.ads.initialization.InitializationStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RNAdmobNativeAdsManager extends ReactContextBaseJavaModule {
     public ReactApplicationContext mContext;
     public RNAdmobNativeAdsManager(ReactApplicationContext context) {
         super(context);
         mContext = context;
-        MobileAds.initialize(context);
     }
 
     @NonNull
@@ -66,10 +69,13 @@ public class RNAdmobNativeAdsManager extends ReactContextBaseJavaModule {
         }
 
         MobileAds.setRequestConfiguration(configuration.build());
-        // TODO: Is it a problem that I'm calling initialize twice?
-        MobileAds.initialize(getReactApplicationContext());
-
-        promise.resolve(null);
+        MobileAds.initialize(getReactApplicationContext(), (InitializationStatus status) -> {
+            WritableMap map = Arguments.createMap();
+            for (Map.Entry<String, AdapterStatus> entry: status.getAdapterStatusMap().entrySet()) {
+                map.putString(entry.getKey(), entry.getValue().getInitializationState().toString());
+            }
+            promise.resolve(map);
+        });
     }
 
     @ReactMethod
