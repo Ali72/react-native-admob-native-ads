@@ -1,21 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const AdBadge = (props) => {
+const AdBadge = ({allCaps,textStyle,style}) => {
   return (
     <View
       style={[
         styles.container,
-        props.style,
+       style,
       ]}
     >
       <Text
         style={[
           styles.text,
-          props.textStyle,
+          textStyle,
         ]}
       >
-        {props.allCaps ? 'AD' : 'Ad'}
+        {allCaps ? 'AD' : 'Ad'}
       </Text>
     </View>
   );
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: 15,
-    width: 15,
     borderWidth: 1,
     borderRadius: 2.5,
     borderColor: "green",
