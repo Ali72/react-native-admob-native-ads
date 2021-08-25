@@ -15,7 +15,7 @@
   "dependencies": {
     "react": "17.0.1",
     "react-native": "0.64.2",
-    "react-native-admob-native-ads": "../",
+    "react-native-admob-native-ads": "file:..",
     "react-native-tracking-transparency": "^0.1.1",
     "react-native-vector-icons": "^8.1.0"
   },
