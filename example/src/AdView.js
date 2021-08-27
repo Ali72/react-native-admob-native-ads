@@ -139,6 +139,7 @@ export const AdView = React.memo(({index, media, type, loadOnMount = true}) => {
   return (
     <NativeAdView
       ref={nativeAdRef}
+      repository={type === 'image' ? 'imageAd' : 'videoAd'}
       onAdLoaded={onAdLoaded}
       onAdFailedToLoad={onAdFailedToLoad}
       onAdLeftApplication={onAdLeftApplication}

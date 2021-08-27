@@ -9,7 +9,11 @@
 #define RNAdMobUnifiedAdQueueWrapper_h
 #import "PriorityQueue.h"
 #import "RNAdMobUnifiedAdContainer.h"
-@interface RNAdMobUnifiedAdQueueWrapper:NSObject<GADAdLoaderDelegate>
+#import "AdListener.h"
+
+@interface RNAdMobUnifiedAdQueueWrapper:NSObject<GADNativeAdLoaderDelegate,GADNativeAdDelegate>
+
+-(instancetype)initWithConfig:(NSDictionary *)config repo:(NSString *)repo rootVC:(UIViewController*)rootVC;
 
 @property(nonatomic, readwrite) NSString* adUnitId;
 @property(nonatomic, readwrite) NSString* name;
@@ -26,7 +30,7 @@
 //   private final onUnifiedNativeAdLoadedListener unifiedNativeAdLoadedListener;
 @property(nonatomic, readwrite) PriorityQueue* nativeAds;
 
--(void) attachAdListener:(AdListener *) listener;
+-(void) attachAdListener:(id<AdListener>) listener;
 -(void) detachAdListener;
 -(void) loadAds;
 -(void) loadAd;

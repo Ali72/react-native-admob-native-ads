@@ -10,16 +10,19 @@
 #import "AdListener.h"
 #import "RNAdMobUnifiedAdContainer.h"
 
+
+
 @interface CacheManager:NSObject
-extern NSString* const EVENT_AD_PRELOAD_LOADED;
-extern NSString* const EVENT_AD_PRELOAD_ERROR;
+
 + (CacheManager*)sharedInstance;
++ (NSString*)  EVENT_AD_PRELOAD_LOADED;
++ (NSString*)  EVENT_AD_PRELOAD_ERROR;
 
 -(BOOL) isLoading:(NSString*) id;
 -(int)  numberOfAds:(NSString*) id;
--(void) attachAdListener:(NSString*) id listener:(AdListener*)listener;
+-(void) attachAdListener:(NSString*) id listener:(id<AdListener>)listener;
 -(void) detachAdListener:(NSString*) id;
--(NSDictionary*)registerRepo:(NSDictionary*) config;//MARK:TODO!
+-(NSDictionary*)registerRepo:(NSDictionary*) config rootVC:(UIViewController*)rootVC;
 -(void) unRegisterRepo:(NSString*) repo;
 -(void) resetCache;
 -(void) requestAds:(NSString*) repo;

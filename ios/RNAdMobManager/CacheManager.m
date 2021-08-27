@@ -9,14 +9,16 @@
 #import <CacheManager.h>
 #import "RNAdMobUnifiedAdQueueWrapper.h"
 
+
+
 @implementation CacheManager{
     NSMutableDictionary *repositoriesMap;
 }
 
-static CacheManager *_sharedInstance = nil;
++ (NSString *)EVENT_AD_PRELOAD_LOADED { return @"onAdPreloadLoaded"; }
++ (NSString *)EVENT_AD_PRELOAD_ERROR { return @"onAdPreloadError"; }
 
-NSString* const EVENT_AD_PRELOAD_LOADED = @"onAdPreloadLoaded";
-NSString* const EVENT_AD_PRELOAD_ERROR = @"onAdPreloadError";
+static CacheManager *_sharedInstance = nil;
 
 + (CacheManager*)sharedInstance
 {
@@ -45,7 +47,7 @@ NSString* const EVENT_AD_PRELOAD_ERROR = @"onAdPreloadError";
         return 0;
     }
 }
--(void) attachAdListener:(NSString*) id listener:(AdListener*)listener{
+-(void) attachAdListener:(NSString*) id listener:(id<AdListener>)listener{
     RNAdMobUnifiedAdQueueWrapper *repo =  (RNAdMobUnifiedAdQueueWrapper *)([repositoriesMap objectForKey:id]);
     if (repo != nil){
         [repo attachAdListener:listener];
@@ -58,12 +60,12 @@ NSString* const EVENT_AD_PRELOAD_ERROR = @"onAdPreloadError";
         [repo detachAdListener];
     }
 }
--(NSDictionary*)registerRepo:(NSDictionary*) config{
+-(NSDictionary*)registerRepo:(NSDictionary*) config rootVC:(UIViewController*)rootVC{
     
     NSMutableDictionary*  args = [[NSMutableDictionary alloc] init];
     NSString* repoId = nil;
-    if ([config objectForKey:@"adUnitId"]) {
-        [args setObject:[NSNumber numberWithBool:NO] forKey:@"success"];
+    if (![config objectForKey:@"adUnitId"]) {
+        [args setObject:[NSNumber numberWithBool:false] forKey:@"success"];
         [args setObject:@"the adUnitId has to be set in config" forKey:@"error"];
     }
     
@@ -75,9 +77,10 @@ NSString* const EVENT_AD_PRELOAD_ERROR = @"onAdPreloadError";
         }
     }
     if (repoId != nil){
-                
+             
                 if (![repositoriesMap objectForKey:repoId]) {
-                    RNAdMobUnifiedAdQueueWrapper *repo = [[RNAdMobUnifiedAdQueueWrapper alloc] init];
+//                    RNAdMobUnifiedAdQueueWrapper *repo = [[RNAdMobUnifiedAdQueueWrapper alloc] init];
+                    RNAdMobUnifiedAdQueueWrapper *repo = [[RNAdMobUnifiedAdQueueWrapper alloc] initWithConfig:config repo:repoId rootVC:rootVC];
                     [repositoriesMap setObject:repo forKey:repoId];
                 
                     [args setObject:[NSNumber numberWithBool:YES] forKey:@"success"];
@@ -91,10 +94,6 @@ NSString* const EVENT_AD_PRELOAD_ERROR = @"onAdPreloadError";
         [args setObject:[NSNumber numberWithBool:NO] forKey:@"success"];
         [args setObject:@"the adUnitId or name has to be set in config" forKey:@"error"];
     }
-    
-    //MARK:TODO try and catch
-    
-    
     return  args;
     
 }

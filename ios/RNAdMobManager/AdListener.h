@@ -7,8 +7,10 @@
 
 #ifndef AdListener_h
 #define AdListener_h
-
-@interface AdListener
+@import GoogleMobileAds;
+@protocol AdListener <GADNativeAdDelegate>
+@optional
+- (void)didFailToReceiveAdWithError:(nonnull NSError *)error;
 @end
 
 #endif /* AdListener_h */
