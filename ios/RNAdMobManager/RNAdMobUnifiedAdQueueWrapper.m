@@ -80,18 +80,6 @@
 
     adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId rootViewController:rootVC adTypes:@[kGADAdLoaderAdTypeNative] options:@[adVideoOptions,adPlacementOptions,multipleAdsOptions]];
     
-//    GADNativeAdViewAdOptions *adPlacementOptions = [[GADNativeAdViewAdOptions alloc] init];
-//    GADVideoOptions *adVideoOptions = [[GADVideoOptions alloc] init];
-//    GADNativeAdMediaAdLoaderOptions *adMediaOptions = [[GADNativeAdMediaAdLoaderOptions alloc] init];
-//
-//    [adVideoOptions setStartMuted:true];
-//    [adMediaOptions setMediaAspectRatio:GADMediaAspectRatioLandscape];
-//    [adPlacementOptions setPreferredAdChoicesPosition:GADAdChoicesPositionBottomRightCorner];
-//
-//    adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
-//                                       rootViewController:rootVC
-//                                                  adTypes:@[ kGADAdLoaderAdTypeNative ]
-//                                                  options:@[adMediaOptions,adPlacementOptions,adVideoOptions]];
     [adLoader setDelegate:self];
 
 }
@@ -134,12 +122,11 @@
         if (![_nativeAds isEmpty]){
 
             ad = [_nativeAds peek];
-            if (ad != nil && ([ad loadTime] - now) < _expirationInterval) {
+            if (ad != nil && (now - ad.loadTime) < _expirationInterval) {
                 break;
             } else {
                 if (ad.references <=0){
-                    //MARK:insted destory func
-                    // ad.unifiedNativeAd.destroy();
+                    ad.unifiedNativeAd = nil;
                     [_nativeAds remove:ad];
                 }
             }

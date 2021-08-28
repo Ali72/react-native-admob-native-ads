@@ -71,6 +71,14 @@ BOOL *nonPersonalizedAds;
     return self;
 }
 
+- (void) willMoveToSuperview: (UIView *) newSuperview{
+    if(newSuperview == nil){
+        // UIView was removed from superview
+        unifiedNativeAdContainer.references -= 1;
+    } else {
+        // UIView was added to superview
+    }
+}
 
 - (void)setMediationOptions:(NSDictionary *)mediationOptions {
     NSArray *allKeys = [mediationOptions allKeys];
@@ -452,9 +460,9 @@ BOOL *nonPersonalizedAds;
 - (void)setRepository:(NSString *)repo
 {
     adRepo = repo;
-    if (adRepo){
-        [self getAdFromRepository];
-    }
+//    if (adRepo){
+//        [self getAdFromRepository];
+//    }
 }
 
 
@@ -491,9 +499,8 @@ BOOL *nonPersonalizedAds;
             [adListener didFailToReceiveAdWithError:error];
         }
     } else {
-        if ([CacheManager.sharedInstance numberOfAds:adRepo] != 0) {
-            unifiedNativeAdContainer = [CacheManager.sharedInstance getNativeAd:adRepo];
-            if (unifiedNativeAdContainer != nil) {
+        unifiedNativeAdContainer = [CacheManager.sharedInstance getNativeAd:adRepo];
+        if (unifiedNativeAdContainer != nil) {
                 unifiedNativeAd = unifiedNativeAdContainer.unifiedNativeAd;
                 [self setNativeAd:unifiedNativeAd];
                 if (rnMediaView != nil) {
@@ -501,7 +508,6 @@ BOOL *nonPersonalizedAds;
                     [rnMediaView layoutIfNeeded];
                 }
                 [self  setNativeAdToJS:unifiedNativeAd];
-            }
         } else {
             if (![CacheManager.sharedInstance isLoading:adRepo]){
                 [CacheManager.sharedInstance attachAdListener:adRepo listener:adListener];

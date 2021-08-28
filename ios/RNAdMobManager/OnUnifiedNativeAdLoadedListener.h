@@ -15,7 +15,6 @@
 - (instancetype)initWithRepo:(NSString *)repo nativeAds:(PriorityQueue*) nativeAds  tAds:(int)tAds;
 @property(nonatomic, readwrite) NSString* repo;
 @property(nonatomic, readwrite) PriorityQueue* nativeAds;
-//   Context mContext;
 @property(nonatomic, readwrite) int totalAds;
 @end
 #endif /* OnUnifiedNativeAdLoadedListener_h */
