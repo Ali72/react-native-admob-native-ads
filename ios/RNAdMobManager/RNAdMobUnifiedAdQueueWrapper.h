@@ -32,6 +32,7 @@
 
 -(void) attachAdListener:(id<AdListener>) listener;
 -(void) detachAdListener;
+-(void) configAdLoader:(UIViewController *) rootVC;
 -(void) loadAds;
 -(void) loadAd;
 -(void) fillAd;

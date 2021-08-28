@@ -10,6 +10,7 @@
 @import GoogleMobileAds;
 @protocol AdListener <GADNativeAdDelegate>
 @optional
+- (void)didAdLoaded:(nonnull GADNativeAd *)nativeAd;
 - (void)didFailToReceiveAdWithError:(nonnull NSError *)error;
 @end
 

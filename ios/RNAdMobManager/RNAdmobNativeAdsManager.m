@@ -1,6 +1,8 @@
 #import "RNAdmobNativeAdsManager.h"
 #import "RNNativeAdMobUtils.h"
 #import "CacheManager.h"
+
+
 @import GoogleMobileAds;
 
 #ifdef MEDIATION_FACEBOOK
@@ -18,6 +20,7 @@ RCT_EXPORT_METHOD(isTestDevice:resolver:(RCTPromiseResolveBlock)resolve
 
 RCT_EXPORT_METHOD(registerRepository:(NSDictionary *)config resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject){
+    
     NSDictionary *result = [CacheManager.sharedInstance registerRepo:config rootVC:nil];
     BOOL isSuccess = ((NSNumber *)[result objectForKey:@"success"]).boolValue;
     if (isSuccess){

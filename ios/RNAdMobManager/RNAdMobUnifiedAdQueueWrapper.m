@@ -61,27 +61,40 @@
     }
 
     unifiedNativeAdLoadedListener = [[OnUnifiedNativeAdLoadedListener alloc]initWithRepo:repo nativeAds:_nativeAds tAds:_totalAds];
-    adRequest = [GADRequest request];
 
-    //https://developers.google.com/admob/ios/native/options#objective-c_1
-    GADVideoOptions* vOption = [[GADVideoOptions alloc]init];
-    [vOption setStartMuted:_muted];
-
-    GADNativeAdViewAdOptions* naOption = [[GADNativeAdViewAdOptions alloc]init];
-    naOption.preferredAdChoicesPosition = GADAdChoicesPositionTopRightCorner;
-
-
-//    GADMultipleAdsAdLoaderOptions* multipleAdsOptions = [[GADMultipleAdsAdLoaderOptions alloc] init];
-//    multipleAdsOptions.numberOfAds = _totalAds;
-//
-    adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId rootViewController:rootVC adTypes:@[kGADAdLoaderAdTypeNative] options:@[vOption,naOption]];
-
-    [adLoader setDelegate:self];
-
+    [self configAdLoader:rootVC];
 
     return self;
 }
+-(void) configAdLoader:(UIViewController *) rootVC {
+    //https://developers.google.com/admob/ios/native/options#objective-c_1
+    GADVideoOptions* adVideoOptions = [[GADVideoOptions alloc]init];
+    [adVideoOptions setStartMuted:_muted];
 
+    GADNativeAdViewAdOptions* adPlacementOptions = [[GADNativeAdViewAdOptions alloc]init];
+    adPlacementOptions.preferredAdChoicesPosition = GADAdChoicesPositionTopRightCorner;
+
+
+    GADMultipleAdsAdLoaderOptions* multipleAdsOptions = [[GADMultipleAdsAdLoaderOptions alloc] init];
+    multipleAdsOptions.numberOfAds = _totalAds;
+
+    adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId rootViewController:rootVC adTypes:@[kGADAdLoaderAdTypeNative] options:@[adVideoOptions,adPlacementOptions,multipleAdsOptions]];
+    
+//    GADNativeAdViewAdOptions *adPlacementOptions = [[GADNativeAdViewAdOptions alloc] init];
+//    GADVideoOptions *adVideoOptions = [[GADVideoOptions alloc] init];
+//    GADNativeAdMediaAdLoaderOptions *adMediaOptions = [[GADNativeAdMediaAdLoaderOptions alloc] init];
+//
+//    [adVideoOptions setStartMuted:true];
+//    [adMediaOptions setMediaAspectRatio:GADMediaAspectRatioLandscape];
+//    [adPlacementOptions setPreferredAdChoicesPosition:GADAdChoicesPositionBottomRightCorner];
+//
+//    adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
+//                                       rootViewController:rootVC
+//                                                  adTypes:@[ kGADAdLoaderAdTypeNative ]
+//                                                  options:@[adMediaOptions,adPlacementOptions,adVideoOptions]];
+    [adLoader setDelegate:self];
+
+}
 -(void) attachAdListener:(id<AdListener>) listener {
     attachedAdListener = listener;
 }
@@ -125,8 +138,7 @@
                 break;
             } else {
                 if (ad.references <=0){
-                    //MARK:TODO no destory func
-                    // [ad.unifiedNativeAd removeFromSuperview] ;
+                    //MARK:insted destory func
                     // ad.unifiedNativeAd.destroy();
                     [_nativeAds remove:ad];
                 }
@@ -152,10 +164,13 @@
     return args;
 }
 - (void)adLoader:(nonnull GADAdLoader *)adLoader didReceiveNativeAd:(nonnull GADNativeAd *)nativeAd {
+    [unifiedNativeAdLoadedListener adLoader:adLoader didReceiveNativeAd:nativeAd];
+    [attachedAdListener didAdLoaded:nativeAd];
     [nativeAd setDelegate:self];
 }
 
 - (void)adLoader:(nonnull GADAdLoader *)adLoader didFailToReceiveAdWithError:(nonnull NSError *)error {
+            [unifiedNativeAdLoadedListener adLoader:adLoader didFailToReceiveAdWithError:error];
            NSString *errorMessage = @"";
            BOOL stopPreloading = false;
            switch (error.code) {

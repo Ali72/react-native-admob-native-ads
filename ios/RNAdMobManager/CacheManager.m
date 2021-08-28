@@ -103,6 +103,10 @@ static CacheManager *_sharedInstance = nil;
 -(void) resetCache{
     [repositoriesMap removeAllObjects];
 }
+-(void) configAdLoader:(NSString*) id rootVC:(UIViewController *) rootVC{
+    RNAdMobUnifiedAdQueueWrapper *repo =  (RNAdMobUnifiedAdQueueWrapper *)([repositoriesMap objectForKey:id]);
+    [repo configAdLoader:rootVC];
+}
 -(void) requestAds:(NSString*) id{
     RNAdMobUnifiedAdQueueWrapper *repo =  (RNAdMobUnifiedAdQueueWrapper *)([repositoriesMap objectForKey:id]);
     [repo loadAds];
