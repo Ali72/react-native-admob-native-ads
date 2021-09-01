@@ -19,7 +19,7 @@
 + (NSString*)  EVENT_AD_PRELOAD_ERROR;
 
 -(BOOL) isLoading:(NSString*) id;
--(int)  numberOfAds:(NSString*) id;
+-(NSInteger)  numberOfAds:(NSString*) id;
 -(void) attachAdListener:(NSString*) id listener:(id<AdListener>)listener;
 -(void) detachAdListener:(NSString*) id;
 -(NSDictionary*)registerRepo:(NSDictionary*) config rootVC:(UIViewController*)rootVC;

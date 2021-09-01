@@ -7,7 +7,6 @@
 
 #ifndef RNAdMobUnifiedAdQueueWrapper_h
 #define RNAdMobUnifiedAdQueueWrapper_h
-#import "PriorityQueue.h"
 #import "RNAdMobUnifiedAdContainer.h"
 #import "AdListener.h"
 
@@ -24,11 +23,7 @@
 @property(nonatomic, readwrite) BOOL mediation;
 @property(nonatomic, readwrite) UIViewController* rootVC;
  
-//   private final AdLoader adLoader;
-//   private AdRequest adRequest;
-//   AdListener attachedAdListener;
-//   private final onUnifiedNativeAdLoadedListener unifiedNativeAdLoadedListener;
-@property(nonatomic, readwrite) PriorityQueue* nativeAds;
+@property(nonatomic, readwrite) NSMutableArray<RNAdMobUnifiedAdContainer *> *nativeAds;
 
 -(void) attachAdListener:(id<AdListener>) listener;
 -(void) detachAdListener;

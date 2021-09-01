@@ -39,10 +39,10 @@ static CacheManager *_sharedInstance = nil;
     RNAdMobUnifiedAdQueueWrapper *repo =  (RNAdMobUnifiedAdQueueWrapper *)([repositoriesMap objectForKey:id]);
     return  repo && repo.isLoading;
 }
--(int)  numberOfAds:(NSString*) id{
+-(NSInteger)  numberOfAds:(NSString*) id{
     RNAdMobUnifiedAdQueueWrapper *repo =  (RNAdMobUnifiedAdQueueWrapper *)([repositoriesMap objectForKey:id]);
     if (repo != nil){
-      return repo.nativeAds.size;
+      return repo.nativeAds.count;
     }else{
         return 0;
     }

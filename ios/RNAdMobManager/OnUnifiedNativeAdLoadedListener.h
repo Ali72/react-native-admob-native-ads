@@ -7,14 +7,14 @@
 
 #ifndef OnUnifiedNativeAdLoadedListener_h
 #define OnUnifiedNativeAdLoadedListener_h
-#import "PriorityQueue.h"
+#import "RNAdMobUnifiedAdContainer.h"
 @import GoogleMobileAds;
 
 @interface OnUnifiedNativeAdLoadedListener : NSObject<GADNativeAdLoaderDelegate>
 
-- (instancetype)initWithRepo:(NSString *)repo nativeAds:(PriorityQueue*) nativeAds  tAds:(int)tAds;
+- (instancetype)initWithRepo:(NSString *)repo nativeAds:(NSMutableArray<RNAdMobUnifiedAdContainer *> *) nativeAds  tAds:(int)tAds;
 @property(nonatomic, readwrite) NSString* repo;
-@property(nonatomic, readwrite) PriorityQueue* nativeAds;
+@property(nonatomic, readwrite) NSMutableArray<RNAdMobUnifiedAdContainer *> * nativeAds;
 @property(nonatomic, readwrite) int totalAds;
 @end
 #endif /* OnUnifiedNativeAdLoadedListener_h */

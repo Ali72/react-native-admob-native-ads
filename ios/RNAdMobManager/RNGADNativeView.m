@@ -460,9 +460,6 @@ BOOL *nonPersonalizedAds;
 - (void)setRepository:(NSString *)repo
 {
     adRepo = repo;
-//    if (adRepo){
-//        [self getAdFromRepository];
-//    }
 }
 
 

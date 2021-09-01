@@ -11,7 +11,7 @@
 #import "EventEmitter.h"
 #import "CacheManager.h"
 @implementation OnUnifiedNativeAdLoadedListener
--(instancetype) initWithRepo:(NSString *)repo nativeAds:(PriorityQueue *)nativeAds tAds:(int)tAds{
+-(instancetype) initWithRepo:(NSString *)repo nativeAds:(NSMutableArray<RNAdMobUnifiedAdContainer *> *) nativeAds tAds:(int)tAds{
     _repo = repo;
     _nativeAds = nativeAds;
     _totalAds = tAds;
@@ -20,11 +20,11 @@
 
 - (void)adLoader:(nonnull GADAdLoader *)adLoader didReceiveNativeAd:(nonnull GADNativeAd *)nativeAd {
     long long time = (long long)([[NSDate date] timeIntervalSince1970] * 1000.0);
-    if (self.nativeAds.size > _totalAds){
-               // remove oldest ad if it is full
-               RNAdMobUnifiedAdContainer *toBeRemoved = nil;
+    if (self.nativeAds.count > _totalAds){
+        // remove oldest ad if it is full
+        RNAdMobUnifiedAdContainer *toBeRemoved = nil;
 
-        for (RNAdMobUnifiedAdContainer *ad in [_nativeAds toArray])
+        for (RNAdMobUnifiedAdContainer *ad in _nativeAds)
         {
             if (ad.loadTime < time && ad.references <=0){
                 time = ad.loadTime;
@@ -32,15 +32,15 @@
             }
         }
         if (toBeRemoved !=  nil){
-            toBeRemoved.unifiedNativeAd = nil;//insted of destory
-            [self.nativeAds remove:toBeRemoved];
+            toBeRemoved.unifiedNativeAd = nil;
+            [self.nativeAds removeObject:toBeRemoved];
         }
     }
     RNAdMobUnifiedAdContainer *coniner = [[RNAdMobUnifiedAdContainer alloc] initWithAd:nativeAd loadTime:time showCount:0];
-    [self.nativeAds add: coniner];
+    [self.nativeAds addObject: coniner];
 
     NSMutableDictionary*  args = [[NSMutableDictionary alloc] init];
-    [args setObject:[NSNumber numberWithInt:_nativeAds.size] forKey:_repo];
+    [args setObject:[NSNumber numberWithInteger:_nativeAds.count] forKey:_repo];
     [EventEmitter.sharedInstance sendEvent:CacheManager.EVENT_AD_PRELOAD_LOADED dict:args];
 }
 
