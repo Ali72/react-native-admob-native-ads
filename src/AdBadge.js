@@ -15,7 +15,7 @@ const AdBadge = ({allCaps,textStyle,style}) => {
           textStyle,
         ]}
       >
-        {allCaps ? 'AD' : 'Ad'}
+        {allCaps ? 'AD' : 'AD'}
       </Text>
     </View>
   );
@@ -25,18 +25,20 @@ export default AdBadge;
 
 const styles = StyleSheet.create({
   container: {
-    height: 15,
-    width: 15,
+    height: 17,
+    width: 21,
     borderWidth: 1,
     borderRadius: 2.5,
-    borderColor: "green",
-    position: 'absolute',
     left: 0,
-    top: 0
+    top: 0,
+    justifyContent:'center',
+    alignItems:'center',
+    paddingHorizontal: 1,
+    position:"absolute",
 
   },
   text: {
-    color: "green",
-    fontSize: 8
+    fontSize: 12,
+    fontWeight:"bold"
   }
 })

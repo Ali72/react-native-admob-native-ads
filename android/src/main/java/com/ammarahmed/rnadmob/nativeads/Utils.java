@@ -8,8 +8,6 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableType;
 import com.google.ads.mediation.admob.AdMobAdapter;
-import com.google.ads.mediation.facebook.FacebookAdapter;
-import com.google.ads.mediation.facebook.FacebookExtras;
 import com.google.android.gms.ads.VideoOptions;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
@@ -22,11 +20,13 @@ public class Utils {
         if (options == null) return;
         if (options.hasKey("targets")) {
             ReadableArray targets = options.getArray("targets");
+
             for (int i = 0; i < targets.size(); i++) {
                 ReadableMap target = targets.getMap(i);
                 String key = target.getString("key");
                 if (target.getType("value") == ReadableType.Array) {
                     List list = Arguments.toList(target.getArray("value"));
+
                     adRequest.addCustomTargeting(key, list);
                 } else {
                     adRequest.addCustomTargeting(key, target.getString("value"));
@@ -81,17 +81,8 @@ public class Utils {
     }
 
     public static void setMediaAspectRatio(int type, NativeAdOptions.Builder adOptions) {
-        Log.d("LOG_NATIVE_ADS" , FacebookAdapter.class.getName());
 
         adOptions.setMediaAspectRatio(type);
-    }
-
-    public static void setMediationOptions(ReadableMap options, AdManagerAdRequest.Builder adRequest) {
-        if (options == null) return;
-        if (options.hasKey("nativeBanner")) {
-            Bundle facebookExtras = new FacebookExtras().setNativeBanner(options.getBoolean("nativeBanner")).build();
-            adRequest.addNetworkExtrasBundle(FacebookAdapter.class, facebookExtras);
-        }
     }
 
     public static void setRequestNonPersonalizedAdsOnly(boolean npa, AdManagerAdRequest.Builder adRequest) {

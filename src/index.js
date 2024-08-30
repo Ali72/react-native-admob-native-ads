@@ -3,11 +3,13 @@ import {
   findNodeHandle,
   Platform,
   requireNativeComponent,
-  UIManager
+  UIManager,
 } from "react-native";
 import { defaultAd, NativeAdContext } from "./context";
 import { AdOptions } from "./utils";
 import Wrapper from "./Wrapper";
+import AdBadge from "./AdBadge";
+import { RNGADNativeView } from "./RNGADNativeView";
 
 const testNativeAd = {
   headline: "Test Ad: Lorem ipsum dolor ",
@@ -38,7 +40,7 @@ export class NativeAdView extends Component {
 
   _onAdFailedToLoad = (event) => {
     if (this.props.onAdFailedToLoad) {
-      this.props.onAdFailedToLoad(event.nativeEvent);
+      this.props.onAdFailedToLoad(event.nativeEvent?.error);
     }
   };
 
@@ -71,7 +73,9 @@ export class NativeAdView extends Component {
       this.updateAd();
       if (this.props.onUnifiedNativeAdLoaded) {
         this.props.onUnifiedNativeAdLoaded(this.ad);
-        console.warn('[DEPRECATED] onUnifiedNativeAdLoaded is deprecated and will be removed in future versions. Use onNativeAdLoaded instead.')
+        console.warn(
+          "[DEPRECATED] onUnifiedNativeAdLoaded is deprecated and will be removed in future versions. Use onNativeAdLoaded instead."
+        );
       }
       if (this.props.onNativeAdLoaded) {
         this.props.onNativeAdLoaded(this.ad);
@@ -79,17 +83,16 @@ export class NativeAdView extends Component {
     }
   };
 
-  _onAdLefApplication = (event) => {
+  _onAdLeftApplication = (event) => {
     if (this.props.onAdLeftApplication)
       this.props.onAdLeftApplication(event.nativeEvent);
   };
 
   updateAd() {
-    if (this.componentMounted) {
-      this.setState({
-        nativeAd: this.ad,
-      });
-    }
+    if (!this.componentMounted) return;
+    this.setState({
+      nativeAd: this.ad,
+    });
   }
 
   componentDidMount() {
@@ -131,7 +134,7 @@ export class NativeAdView extends Component {
           onAdLoaded={this._onAdLoaded}
           onAdFailedToLoad={this._onAdFailedToLoad}
           onAdClicked={this._onAdClicked}
-          onAdLeftApplication={this._onAdLefApplication}
+          onAdLeftApplication={this._onAdLeftApplication}
           onAdOpened={this._onAdOpened}
           onAdClosed={this._onAdClosed}
           onAdImpression={this._onAdImpression}
@@ -146,7 +149,9 @@ export class NativeAdView extends Component {
           videoOptions={this.props.videoOptions}
           mediationOptions={this.props.mediationOptions}
           targetingOptions={this.props.targetingOptions}
-          adChoicesPlacement={AdOptions.adChoicesPlacement[this.props.adChoicesPlacement]}
+          adChoicesPlacement={
+            AdOptions.adChoicesPlacement[this.props.adChoicesPlacement]
+          }
         >
           <Wrapper
             onLayout={(event) => {
@@ -177,9 +182,5 @@ NativeAdView.defaultProps = {
 };
 
 NativeAdView.simulatorId = "SIMULATOR";
-
-const RNGADNativeView = requireNativeComponent(
-  "RNGADNativeView"
-);
 
 export default NativeAdView;
